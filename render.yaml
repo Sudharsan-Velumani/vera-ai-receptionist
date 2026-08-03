@@ -1,0 +1,31 @@
+# Render Blueprint — deploys the API as an ordinary long-running Node server.
+#
+# Why this exists: Vercel serves the client beautifully, but running Express as
+# a serverless function depends on Vercel detecting api/ at the repository
+# root. If the project's Root Directory points at client/ — which Vercel
+# auto-selects, because it finds a Vite app there — the API silently never
+# deploys and every /api call 404s.
+#
+# Splitting them removes that failure mode entirely, and lets Vercel keep the
+# client/ root directory it wants.
+#
+#   Render  ->  the API        (this file)
+#   Vercel  ->  the client     (VITE_API_URL points at the Render URL)
+
+services:
+  - type: web
+    name: vera-api
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: JWT_SECRET
+        generateValue: true      # Render generates a strong secret for you
+      - key: DATABASE_URL
+        sync: false              # paste your Neon pooled connection string
+      - key: GROQ_API_KEY
+        sync: false              # optional — offline brain answers without it

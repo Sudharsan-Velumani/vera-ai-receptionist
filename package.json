@@ -1,0 +1,32 @@
+{
+  "name": "vera-ai-receptionist",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Vera - AI receptionist. Full-stack demo: browser voice agent, transcripts, AI summaries, CRM.",
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev": "concurrently -n api,web -c cyan,magenta \"npm:dev:api\" \"npm:dev:web\"",
+    "dev:api": "npm --workspace server run dev",
+    "dev:web": "npm --workspace client run dev",
+    "build": "npm --workspace client run build",
+    "preflight": "node scripts/preflight.mjs",
+    "start": "npm --workspace server run start",
+    "seed": "npm --workspace server run seed",
+    "smoke": "node scripts/smoke.mjs",
+    "test": "node scripts/echo.test.mjs && node scripts/postgres.test.mjs",
+    "test:echo": "node scripts/echo.test.mjs",
+    "test:postgres": "node scripts/postgres.test.mjs",
+    "smoke:postgres": "node scripts/smoke.postgres.mjs"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "pg-mem": "^3.0.5"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
